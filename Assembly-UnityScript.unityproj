@@ -45,9 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scenes\WebGLTemplates\AirConsole\TemplateData\CSSPlugin.js" />
-     <Compile Include="Assets\Scenes\WebGLTemplates\AirConsole\TemplateData\UnityProgress.js" />
-     <Compile Include="Assets\Scenes\WebGLTemplates\AirConsole\airconsole-unity-plugin.js" />
+     <Compile Include="Assets\Controller\controller.html.js" />
      <None Include="Assets\AirConsole\README.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Programs/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
@@ -56,7 +54,7 @@
  <HintPath>D:/Programs/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="websocket-sharp">
- <HintPath>D:/_GitHub_Projects/MultiplayerParty/MultiplayerParty/Assets/AirConsole/plugins/websocket-sharp.dll</HintPath>
+ <HintPath>D:/_GitHub_Projects/MultiplayerParty/Assets/AirConsole/plugins/websocket-sharp.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
