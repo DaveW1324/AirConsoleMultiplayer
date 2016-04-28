@@ -203,7 +203,8 @@
      <Compile Include="Assets\AirConsole\scripts\DebugLevel.cs" />
      <Compile Include="Assets\AirConsole\scripts\Settings.cs" />
      <Compile Include="Assets\AirConsole\scripts\WebsocketListener.cs" />
-     <Compile Include="Assets\Game\ConnectionManager.cs" />
+     <Compile Include="Assets\Game\Scripts\ConnectionManager.cs" />
+     <Compile Include="Assets\Game\Scripts\Player.cs" />
      <None Include="Assets\AirConsole\README.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Programs/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

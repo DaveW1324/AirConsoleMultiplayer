@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using NDream.AirConsole;
 using Newtonsoft.Json.Linq;
 
 public class ConnectionManager : MonoBehaviour {
+
+	public GameObject playerPrefab;
+
+	protected Dictionary<int, Player> players = new Dictionary<int, Player> ();
 
 	public void Awake() {
 		AirConsole.instance.onMessage += OnMessage;
@@ -20,6 +25,16 @@ public class ConnectionManager : MonoBehaviour {
 		Debug.LogWarning ("Player Connected: " + deviceId);
 		if (AirConsole.instance.GetActivePlayerDeviceIds.Count < 4) {
 			AirConsole.instance.SetActivePlayers (4);
+
+			int playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
+
+			// If our player is reconnecting then we do not need to respawn them a character because
+			// their character already exists.
+			if (!players.ContainsKey(playerNumber)) {
+				GameObject go = (GameObject) Instantiate (playerPrefab, Vector3.zero, Quaternion.identity);
+			 	Player p = go.GetComponent<Player> ();
+				players.Add (playerNumber, p);
+			}
 		} else {
 			Debug.LogWarning ("Too many players");
 		}			
@@ -33,10 +48,10 @@ public class ConnectionManager : MonoBehaviour {
 	{
 		Debug.LogWarning ("OnDisconnect");
 
-		int activePlayer = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
+		int playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
 
-		if (activePlayer != -1) {
-			Debug.LogWarning ("Player Disconnected: " + activePlayer);
+		if (playerNumber != -1) {
+			Debug.LogWarning ("Player Disconnected: " + playerNumber);
 		}
 	}
 
@@ -47,10 +62,11 @@ public class ConnectionManager : MonoBehaviour {
 	/// <param name="deviceId">DeviceId.</param>
 	/// <param name="data">Data.</param>
 	void OnMessage (int deviceId, JToken data) {
-		int activePlayer = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
+		int playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
 
-		if (activePlayer != -1) {
-			Debug.LogWarning ("Successfully recieved message from: " + activePlayer);
+		if (playerNumber != -1) {
+			Player p = players [playerNumber];
+			p.Move ((float)data ["move"]);
 		}
 	}
 }
