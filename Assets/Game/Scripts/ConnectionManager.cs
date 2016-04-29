@@ -66,7 +66,7 @@ public class ConnectionManager : MonoBehaviour {
 
 		if (playerNumber != -1) {
 			Player p = players [playerNumber];
-			p.Move ((float)data ["move"]);
+			p.ProcessMessage (data);
 		}
 	}
 }

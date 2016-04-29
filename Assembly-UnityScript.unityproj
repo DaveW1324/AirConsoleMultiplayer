@@ -45,7 +45,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Controller\controller.html.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\button\button.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\ctrl-generator\ctrl-generator.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\ctrl-generator\ui-ctrl-generator.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\dpad\dpad.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\examples\fake-airconsole.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\joystick\joystick.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\rate-limiter\rate-limiter.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\shake-detecor\airconsole-shake-detector.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\swipe-analog\swipe-analog.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\swipe-digital\swipe-digital.js" />
+     <Compile Include="Assets\Controller\airconsole-controls\swipe-pattern\swipe-pattern.js" />
      <None Include="Assets\AirConsole\README.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Programs/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
