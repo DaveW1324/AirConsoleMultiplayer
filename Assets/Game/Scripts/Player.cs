@@ -27,12 +27,14 @@ public class Player : MonoBehaviour {
 			else if((bool) data["joystick-left"]["pressed"]) {
 				float x = (float) data["joystick-left"]["message"]["x"];
 				float y = (float) data["joystick-left"]["message"]["y"];
-				playerBody.velocity = new Vector3(x, 0, y) * 10;
+				playerBody.velocity = new Vector3(x, 0, -y) * 10;
 			}
-				
-
+            else
+            {
+                playerBody.velocity = Vector3.zero;
+            }
 		} catch (Exception e) {
-			Debug.LogError ("I am so lost");
+			Debug.LogError ("Exception handling player input: " + e.ToString());
 		}
 	}		
 }
