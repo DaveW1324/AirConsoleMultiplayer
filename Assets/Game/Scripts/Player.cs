@@ -8,50 +8,104 @@ public class Player : MonoBehaviour {
 
     // Common Player Info
     public float speed = 10.0f;
-    public float timeToMaxSpeed = 0.5f;
-    public float timerCooldown = 0f;
 
-	// Components
-	protected Rigidbody playerBody;
+    // Components
+    public GameObject avatar;
+    protected Rigidbody playerRigidBody;
 
 	// Player Information
 	protected int health;
+    protected Vector3 playerInput = Vector3.zero;
 
-	public void Awake() {
-		playerBody = GetComponent<Rigidbody> ();
+	public void Awake()
+    {
+		playerRigidBody = GetComponent<Rigidbody> ();
 	}
-   
-	public void ProcessMessage(JToken data) {
-		try{
-			Debug.Log(data.First);
 
+    /*
+    // Should be used for testing only
+    public void Update()
+    {
+        Vector3 testInput = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            testInput += Vector3.forward;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            testInput += Vector3.back;
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            testInput += Vector3.left;
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            testInput += Vector3.right;
+        }
+
+        playerInput = testInput;
+    }
+    */
+
+    public void FixedUpdate()
+    {
+        Vector3 rawVelocity = Vector3.ClampMagnitude((playerInput) * speed, speed);
+        playerRigidBody.velocity = Vector3.Slerp(playerRigidBody.velocity, rawVelocity, Time.fixedDeltaTime * speed);
+
+        if (playerInput != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(playerRigidBody.velocity);
+            playerRigidBody.rotation = Quaternion.Slerp(playerRigidBody.rotation, targetRotation, Time.fixedDeltaTime * speed);
+        }
+    }
+    
+    public void ProcessMessage(JToken data) {
+        try {
 			if (data["Shoot"] != null) {
 				Debug.Log("Shooting");
 				Debug.Log(data["Shoot"]["pressed"]);
-			}			
-			else if((bool) data["joystick-left"]["pressed"]) {
+			}
+            			
+			if((bool) data["joystick-left"]["pressed"]) {
 				float x = (float) data["joystick-left"]["message"]["x"];
 				float y = (float) data["joystick-left"]["message"]["y"];
 
-                Vector3 oldVelocity = playerBody.velocity;
-                Vector3 newVelocity = new Vector3(x, 0, -y) * speed;
-
-
-                playerBody.rotation = Quaternion.LookRotation(newVelocity);
-                playerBody.velocity = newVelocity;
-
-                /*
-                timerCooldown = timerCooldown + Time.deltaTime > timerCooldown ? timerCooldown : timerCooldown + Time.deltaTime;                
-                playerBody.rotation = Quaternion.Lerp(playerBody.rotation, Quaternion.LookRotation(newVelocity), timerCooldown);
-                playerBody.velocity = Vector3.Lerp(oldVelocity, newVelocity, timerCooldown);
-                */
+                playerInput = TranslateXYToVector(x, y);
             }
             else
             {
-                playerBody.velocity = Vector3.zero;
+                playerInput = Vector3.zero;
             }
 		} catch (Exception e) {
 			Debug.LogError ("Exception handling player input: " + e.ToString());
 		}
-	}		
+	}
+
+    protected Vector3 TranslateXYToVector(float x, float y)
+    {
+        Vector3 temp = Vector3.zero;
+
+        if (y < 0)
+        {
+            temp += Vector3.forward;
+        }
+        else if (y > 0)
+        {
+            temp += Vector3.back;
+        }
+
+        if (x > 0)
+        {
+            temp += Vector3.right;
+        }
+        else if (x < 0)
+        {
+            temp += Vector3.left;
+        }
+
+        return temp;
+    }
 }

@@ -6,7 +6,8 @@ using Newtonsoft.Json.Linq;
 
 public class ConnectionManager : MonoBehaviour {
 
-	public GameObject playerPrefab;
+    public Transform spawnLocation;
+    public GameObject playerPrefab;
 
 	protected Dictionary<int, Player> players = new Dictionary<int, Player> ();
 
@@ -31,7 +32,7 @@ public class ConnectionManager : MonoBehaviour {
 			// If our player is reconnecting then we do not need to respawn them a character because
 			// their character already exists.
 			if (!players.ContainsKey(playerNumber)) {
-				GameObject go = (GameObject) Instantiate (playerPrefab, Vector3.zero, Quaternion.identity);
+				GameObject go = (GameObject) Instantiate (playerPrefab, spawnLocation.position, spawnLocation.rotation);
 			 	Player p = go.GetComponent<Player> ();
 				players.Add (playerNumber, p);
 			}
