@@ -8,13 +8,16 @@ public class Player : MonoBehaviour {
 
     // Common Player Info
     public float speed = 10.0f;
+    public Transform gunTip;
+    public GameObject standardBullet;
 
     // Components
     public GameObject avatar;
     protected Rigidbody playerRigidBody;
 
-	// Player Information
-	protected int health;
+    // Player Information
+    public int playerNumber;
+	protected float health;
     protected Vector3 playerInput = Vector3.zero;
 
 	public void Awake()
@@ -22,9 +25,9 @@ public class Player : MonoBehaviour {
 		playerRigidBody = GetComponent<Rigidbody> ();
 	}
 
-    /*
+/*    
     // Should be used for testing only
-    public void Update()
+    public void FixedUpdate()
     {
         Vector3 testInput = Vector3.zero;
 
@@ -46,11 +49,16 @@ public class Player : MonoBehaviour {
             testInput += Vector3.right;
         }
 
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            Shoot();
+        }
+
         playerInput = testInput;
     }
     */
-
-    public void FixedUpdate()
+    
+    public void Update()
     {
         Vector3 rawVelocity = Vector3.ClampMagnitude((playerInput) * speed, speed);
         playerRigidBody.velocity = Vector3.Slerp(playerRigidBody.velocity, rawVelocity, Time.fixedDeltaTime * speed);
@@ -67,6 +75,7 @@ public class Player : MonoBehaviour {
 			if (data["Shoot"] != null) {
 				Debug.Log("Shooting");
 				Debug.Log(data["Shoot"]["pressed"]);
+                Shoot();
 			}
             			
 			if((bool) data["joystick-left"]["pressed"]) {
@@ -107,5 +116,25 @@ public class Player : MonoBehaviour {
         }
 
         return temp;
+    }
+
+    protected void Shoot()
+    {
+        GameObject go = (GameObject)Instantiate(standardBullet, gunTip.position, transform.rotation);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+
+    protected void Die()
+    {
+        //Destroy(this.gameObject);
     }
 }

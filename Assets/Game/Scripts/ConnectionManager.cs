@@ -34,6 +34,7 @@ public class ConnectionManager : MonoBehaviour {
 			if (!players.ContainsKey(playerNumber)) {
 				GameObject go = (GameObject) Instantiate (playerPrefab, spawnLocation.position, spawnLocation.rotation);
 			 	Player p = go.GetComponent<Player> ();
+                p.playerNumber = playerNumber;
 				players.Add (playerNumber, p);
 			}
 		} else {
