@@ -24,19 +24,33 @@ public class ConnectionManager : MonoBehaviour {
 	public void OnConnect (int deviceId)
 	{
 		Debug.LogWarning ("Player Connected: " + deviceId);
-		if (AirConsole.instance.GetActivePlayerDeviceIds.Count < 4) {
-			AirConsole.instance.SetActivePlayers (4);
 
-			int playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
+        if (TeamManager.Instance.HasCapacity())
+        {
+            int playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber(deviceId);
 
-			// If our player is reconnecting then we do not need to respawn them a character because
-			// their character already exists.
-			if (!players.ContainsKey(playerNumber)) {
-				GameObject go = (GameObject) Instantiate (playerPrefab, spawnLocation.position, spawnLocation.rotation);
-			 	Player p = go.GetComponent<Player> ();
+            // If our player is reconnecting then we do not need to respawn them a character because
+            // their character already exists.
+            if (!players.ContainsKey(playerNumber))
+            {
+                Player p = TeamManager.Instance.GetPlayerAssignedToRandomTeam(playerPrefab);
+
+                // Add 1 to the current number because we have to adjust to the fact that this player 
+                // has not been added to our dictinoary yet
+                AirConsole.instance.SetActivePlayers(players.Count + 1);
+
+                // Regrab the player number in the event the player didnt exist yet then it will 
+                // not have had a valid value (would have been -1)
+                playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber(deviceId);
+
+                // Add the player to our list with this new number and update our Player to be aware
+                players.Add(playerNumber, p);                
                 p.playerNumber = playerNumber;
-				players.Add (playerNumber, p);
-			}
+                
+
+                Debug.Log("Added DeviceId: " + deviceId + " as PlayerNumber: " + playerNumber);
+                Debug.Log("Number of Players: " + players.Count);
+            }
 		} else {
 			Debug.LogWarning ("Too many players");
 		}			
@@ -65,6 +79,8 @@ public class ConnectionManager : MonoBehaviour {
 	/// <param name="data">Data.</param>
 	void OnMessage (int deviceId, JToken data) {
 		int playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
+
+        Debug.Log("Received Message for DeviceID: " + deviceId + " which is PlayerNumber: " + playerNumber);
 
 		if (playerNumber != -1) {
 			Player p = players [playerNumber];
