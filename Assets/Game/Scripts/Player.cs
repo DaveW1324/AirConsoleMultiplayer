@@ -12,52 +12,24 @@ public class Player : MonoBehaviour {
     public GameObject standardBullet;
 
     // Components
-    public GameObject avatar;
     protected Rigidbody playerRigidBody;
+    protected GameObject playerBody;
 
     // Player Information
     public int playerNumber;
 	protected float health;
     protected Vector3 playerInput = Vector3.zero;
 
+    // Spawn information
+    protected GameObject bodyPrefab;
+    protected Team team;
+
+
 	public void Awake()
     {
 		playerRigidBody = GetComponent<Rigidbody> ();
 	}
-
-/*    
-    // Should be used for testing only
-    public void FixedUpdate()
-    {
-        Vector3 testInput = Vector3.zero;
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            testInput += Vector3.forward;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            testInput += Vector3.back;
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            testInput += Vector3.left;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            testInput += Vector3.right;
-        }
-
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            Shoot();
-        }
-
-        playerInput = testInput;
-    }
-    */
-    
+        
     public void Update()
     {
         Vector3 rawVelocity = Vector3.ClampMagnitude((playerInput) * speed, speed);
@@ -71,11 +43,12 @@ public class Player : MonoBehaviour {
     }
     
     public void ProcessMessage(JToken data) {
+
+        Debug.Log(data);
+
         try {
 			if (data["Shoot"] != null) {
-				Debug.Log("Shooting");
-				Debug.Log(data["Shoot"]["pressed"]);
-                Shoot();
+	            Shoot();
 			}
             			
 			if((bool) data["joystick-left"]["pressed"]) {
@@ -99,20 +72,20 @@ public class Player : MonoBehaviour {
 
         if (y < 0)
         {
-            temp += Vector3.forward;
+            temp += Vector3.forward * Math.Abs(y);
         }
         else if (y > 0)
         {
-            temp += Vector3.back;
+            temp += Vector3.back * Math.Abs(y);
         }
 
         if (x > 0)
         {
-            temp += Vector3.right;
+            temp += Vector3.right * Math.Abs(x);
         }
         else if (x < 0)
         {
-            temp += Vector3.left;
+            temp += Vector3.left * Math.Abs(x);
         }
 
         return temp;
@@ -120,7 +93,17 @@ public class Player : MonoBehaviour {
 
     protected void Shoot()
     {
-        GameObject go = (GameObject)Instantiate(standardBullet, gunTip.position, transform.rotation);
+        GameObject go = (GameObject) Instantiate(standardBullet, gunTip.position, transform.rotation);
+
+        StandardBullet bullet = go.GetComponent<StandardBullet>();
+        bullet.Shooter = this; 
+    }
+
+    public void AssignPlayerToTeam(GameObject prefab, Team team)
+    {
+        bodyPrefab = prefab;
+        this.team = team;
+        SpawnPlayer();
     }
 
     public void TakeDamage(float damage)
@@ -135,6 +118,22 @@ public class Player : MonoBehaviour {
 
     protected void Die()
     {
-        //Destroy(this.gameObject);
+        Destroy(playerBody);
+        playerBody = null;
+    }
+
+    protected void SpawnPlayer()
+    {
+        playerBody = (GameObject)Instantiate(bodyPrefab);
+        playerBody.transform.SetParent(this.transform);
+
+        this.transform.position = team.spawnPoint.position;
+        this.transform.rotation = team.spawnPoint.rotation;
+    }
+    
+    protected IEnumerator WaitAndSpawn()
+    {
+        yield return new WaitForSeconds(2f);
+        SpawnPlayer();
     }
 }

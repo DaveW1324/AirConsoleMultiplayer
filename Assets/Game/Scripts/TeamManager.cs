@@ -51,7 +51,7 @@ public class TeamManager
         return false;
     }
 
-    public Player GetPlayerAssignedToRandomTeam(GameObject playerPrefab)
+    public void AssignPlayerToRandomTeam(Player player, GameObject playerPrefab)
     {
         Team selectedTeam = null;
         int lowestNumberOfPlayers = int.MaxValue;
@@ -67,9 +67,7 @@ public class TeamManager
 
         if (selectedTeam != null)
         {
-            return selectedTeam.AddPlayer(playerPrefab, selectedTeam.spawnPoint);
+            selectedTeam.AddPlayer(player, playerPrefab);
         }
-
-        return null;
     }
 }

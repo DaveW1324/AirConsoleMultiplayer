@@ -7,7 +7,8 @@ using Newtonsoft.Json.Linq;
 public class ConnectionManager : MonoBehaviour {
 
     public Transform spawnLocation;
-    public GameObject playerPrefab;
+    public GameObject basePlayer;
+    public GameObject basePlayerBody;
 
 	protected Dictionary<int, Player> players = new Dictionary<int, Player> ();
 
@@ -33,7 +34,9 @@ public class ConnectionManager : MonoBehaviour {
             // their character already exists.
             if (!players.ContainsKey(playerNumber))
             {
-                Player p = TeamManager.Instance.GetPlayerAssignedToRandomTeam(playerPrefab);
+                GameObject go = (GameObject)Instantiate(basePlayer);
+                Player p = go.GetComponent<Player>();
+                TeamManager.Instance.AssignPlayerToRandomTeam(p, basePlayerBody);
 
                 // Add 1 to the current number because we have to adjust to the fact that this player 
                 // has not been added to our dictinoary yet

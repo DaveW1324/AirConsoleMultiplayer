@@ -12,7 +12,11 @@ public class StandardBullet : Projectile
 
     public override void PerformDamage(Collision collision)
     {
-        //Player p = collision.gameObject.GetComponent<Player>();
-        //p.TakeDamage(damage);
+        Player p = collision.gameObject.GetComponent<Player>();
+        
+        if (p != null)
+        {
+            p.TakeDamage(damage);
+        }
     }
 }

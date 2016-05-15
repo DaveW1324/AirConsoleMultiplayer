@@ -30,17 +30,12 @@ public class Team : MonoBehaviour {
         TeamManager.Instance.AddTeam(this);
     }
 
-    public Player AddPlayer(GameObject prefab, Transform spawnLocation)
+    public void AddPlayer(Player player, GameObject prefab)
     {
-        GameObject go = (GameObject)Instantiate(prefab, spawnLocation.position, spawnLocation.rotation);
-        Player p = go.GetComponent<Player>();
-
-        if (HasCapacity && !players.Contains(p))
+        if (HasCapacity && !players.Contains(player))
         {
-            players.Add(p);
+            players.Add(player);
+            player.AssignPlayerToTeam(prefab, this);
         }
-
-        return p;
     }
-
 }

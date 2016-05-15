@@ -8,6 +8,21 @@ public abstract class Projectile : MonoBehaviour {
     public float radius;
     public float duration;
 
+    protected Player shooter;
+
+    public Player Shooter
+    {
+        get
+        {
+            return shooter;
+        }
+
+        set 
+        {
+            shooter = value;
+        }
+    }
+
     public void OnCollisionEnter(Collision collision) {
         //TODO: display the particle effect
         PerformDamage(collision);
