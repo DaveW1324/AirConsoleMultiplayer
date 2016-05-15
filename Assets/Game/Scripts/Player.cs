@@ -50,16 +50,19 @@ public class Player : MonoBehaviour {
 			if (data["Shoot"] != null) {
 	            Shoot();
 			}
-            			
-			if((bool) data["joystick-left"]["pressed"]) {
-				float x = (float) data["joystick-left"]["message"]["x"];
-				float y = (float) data["joystick-left"]["message"]["y"];
 
-                playerInput = TranslateXYToVector(x, y);
-            }
-            else
+            if (data["joystick-left"] != null)
             {
-                playerInput = Vector3.zero;
+                if ((bool)data["joystick-left"]["pressed"]) {
+                    float x = (float)data["joystick-left"]["message"]["x"];
+                    float y = (float)data["joystick-left"]["message"]["y"];
+
+                    playerInput = TranslateXYToVector(x, y);
+                }
+                else
+                {
+                    playerInput = Vector3.zero;
+                }
             }
 		} catch (Exception e) {
 			Debug.LogError ("Exception handling player input: " + e.ToString());

@@ -26,7 +26,7 @@ public abstract class Projectile : MonoBehaviour {
     public void OnCollisionEnter(Collision collision) {
         //TODO: display the particle effect
         PerformDamage(collision);
-        //Destroy(this.gameObject);
+        Destroy(this.gameObject);
     }
 
     public abstract void PerformDamage(Collision collision);
