@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Utilities;
 
 public class Team : MonoBehaviour {
     
@@ -36,6 +40,18 @@ public class Team : MonoBehaviour {
         {
             players.Add(player);
             player.AssignPlayerToTeam(prefab, this);
+            player.Spawn();
         }
+    }
+
+    public void HandlePlayerDeath(Player player)
+    {
+        StartCoroutine(WaitAndSpawn(player));
+    }
+
+    protected IEnumerator WaitAndSpawn(Player player)
+    {
+        yield return new WaitForSeconds(2f);
+        player.Spawn();
     }
 }

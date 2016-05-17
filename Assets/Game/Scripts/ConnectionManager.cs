@@ -6,6 +6,8 @@ using Newtonsoft.Json.Linq;
 
 public class ConnectionManager : MonoBehaviour {
 
+    public bool testing = true;
+
     public Transform spawnLocation;
     public GameObject basePlayer;
     public GameObject basePlayerBody;
@@ -17,6 +19,49 @@ public class ConnectionManager : MonoBehaviour {
 		AirConsole.instance.onConnect += OnConnect;
 		AirConsole.instance.onDisconnect += OnDisconnect;
 	}
+
+    public void Start()
+    {
+        if (testing)
+        {
+            StartCoroutine(WaitAndAddPlayers(4));
+        }
+    }
+
+    public void Update()
+    {
+        if (testing)
+        {
+            Vector3 testInput = Vector3.zero;
+            bool isShooting = false;
+
+            if (Input.GetKey(KeyCode.W))
+            {
+                testInput += Vector3.forward;
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                testInput += Vector3.back;
+            }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                testInput += Vector3.left;
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                testInput += Vector3.right;
+            }
+
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                isShooting = true;
+            }
+            
+            // TODO: Put this into the appropriate format
+        }
+    }
+
 
 	/// <summary>
 	/// Raises the connect event.
@@ -44,7 +89,14 @@ public class ConnectionManager : MonoBehaviour {
 
                 // Regrab the player number in the event the player didnt exist yet then it will 
                 // not have had a valid value (would have been -1)
-                playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber(deviceId);
+                if(testing)
+                {
+                    playerNumber = deviceId;
+                }
+                else
+                {
+                    playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber(deviceId);
+                }
 
                 // Add the player to our list with this new number and update our Player to be aware
                 players.Add(playerNumber, p);                
@@ -90,4 +142,13 @@ public class ConnectionManager : MonoBehaviour {
 			p.ProcessMessage (data);
 		}
 	}
+
+    protected IEnumerator WaitAndAddPlayers(int numberPlayers)
+    {
+        for (int i = 0; i < numberPlayers; i++)
+        {
+            yield return new WaitForSeconds(1.0f);
+            OnConnect(i);
+        }
+    }
 }

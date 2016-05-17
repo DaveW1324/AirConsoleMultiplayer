@@ -105,8 +105,8 @@ public class Player : MonoBehaviour {
     public void AssignPlayerToTeam(GameObject prefab, Team team)
     {
         bodyPrefab = prefab;
+        bodyPrefab.gameObject.GetComponent<MeshRenderer>().material = team.colorMaterial;
         this.team = team;
-        SpawnPlayer();
     }
 
     public void TakeDamage(float damage)
@@ -119,13 +119,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    protected void Die()
-    {
-        Destroy(playerBody);
-        playerBody = null;
-    }
-
-    protected void SpawnPlayer()
+    public void Spawn()
     {
         playerBody = (GameObject)Instantiate(bodyPrefab);
         playerBody.transform.SetParent(this.transform);
@@ -133,10 +127,11 @@ public class Player : MonoBehaviour {
         this.transform.position = team.spawnPoint.position;
         this.transform.rotation = team.spawnPoint.rotation;
     }
-    
-    protected IEnumerator WaitAndSpawn()
+
+    protected void Die()
     {
-        yield return new WaitForSeconds(2f);
-        SpawnPlayer();
+        Destroy(playerBody);
+        team.HandlePlayerDeath(this);
+        playerBody = null;
     }
 }
