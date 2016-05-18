@@ -7,6 +7,8 @@ using Newtonsoft.Json.Linq;
 public class ConnectionManager : MonoBehaviour {
 
     public bool testing = true;
+    public int testingNumberOfPlayers = 4;
+    public int testingPlayerNumber = 0;
 
     public Transform spawnLocation;
     public GameObject basePlayer;
@@ -24,7 +26,7 @@ public class ConnectionManager : MonoBehaviour {
     {
         if (testing)
         {
-            StartCoroutine(WaitAndAddPlayers(4));
+            StartCoroutine(WaitAndAddPlayers(testingNumberOfPlayers));
         }
     }
 
@@ -54,10 +56,10 @@ public class ConnectionManager : MonoBehaviour {
 
             if(Input.GetKeyDown(KeyCode.Space))
             {
-                ProcessMessage(0, JTokenCreator.GetShootJToken());
+                ProcessMessage(testingPlayerNumber, JTokenCreator.GetShootJToken());
             }
 
-            ProcessMessage(0, JTokenCreator.GetControllerJToken(testInput));
+            ProcessMessage(testingPlayerNumber, JTokenCreator.GetControllerJToken(testInput));
         }
     }
 
@@ -139,10 +141,14 @@ public class ConnectionManager : MonoBehaviour {
 
     protected void ProcessMessage(int playerNumber, JToken data)
     {
-        if (playerNumber != -1)
+        if (playerNumber != -1 && players.ContainsKey(playerNumber))
         {
             Player p = players[playerNumber];
             p.ProcessMessage(data);
+        }
+        else
+        {
+            Debug.LogWarning("Attempted to Process a message from an invalid PlayerNumber: " + playerNumber);
         }
     }
 
