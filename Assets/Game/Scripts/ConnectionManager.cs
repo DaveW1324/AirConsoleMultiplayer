@@ -32,33 +32,32 @@ public class ConnectionManager : MonoBehaviour {
     {
         if (testing)
         {
-            Vector3 testInput = Vector3.zero;
-            bool isShooting = false;
+            Vector2 testInput = Vector2.zero;
 
             if (Input.GetKey(KeyCode.W))
             {
-                testInput += Vector3.forward;
+                testInput += Vector2.down;
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                testInput += Vector3.back;
+                testInput += Vector2.up;
             }
 
             if (Input.GetKey(KeyCode.A))
             {
-                testInput += Vector3.left;
+                testInput += Vector2.left;
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                testInput += Vector3.right;
+                testInput += Vector2.right;
             }
 
             if(Input.GetKeyDown(KeyCode.Space))
             {
-                isShooting = true;
+                ProcessMessage(0, JTokenCreator.GetShootJToken());
             }
-            
-            // TODO: Put this into the appropriate format
+
+            ProcessMessage(0, JTokenCreator.GetControllerJToken(testInput));
         }
     }
 
@@ -134,14 +133,18 @@ public class ConnectionManager : MonoBehaviour {
 	/// <param name="data">Data.</param>
 	void OnMessage (int deviceId, JToken data) {
 		int playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
-
         Debug.Log("Received Message for DeviceID: " + deviceId + " which is PlayerNumber: " + playerNumber);
-
-		if (playerNumber != -1) {
-			Player p = players [playerNumber];
-			p.ProcessMessage (data);
-		}
+        ProcessMessage(playerNumber, data);		
 	}
+
+    protected void ProcessMessage(int playerNumber, JToken data)
+    {
+        if (playerNumber != -1)
+        {
+            Player p = players[playerNumber];
+            p.ProcessMessage(data);
+        }
+    }
 
     protected IEnumerator WaitAndAddPlayers(int numberPlayers)
     {
