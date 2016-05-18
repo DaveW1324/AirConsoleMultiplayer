@@ -8,11 +8,13 @@ public class Player : MonoBehaviour {
 
     // Common Player Info
     public float speed = 10.0f;
+    public int maxHealth = 100;
     public Transform gunTip;
     public GameObject standardBullet;
 
     // Components
     protected Rigidbody playerRigidBody;
+    protected BoxCollider playerCollider;
     protected GameObject playerBody;
 
     // Player Information
@@ -27,7 +29,8 @@ public class Player : MonoBehaviour {
 
 	public void Awake()
     {
-		playerRigidBody = GetComponent<Rigidbody> ();
+		playerRigidBody = GetComponent<Rigidbody>();
+        playerCollider = GetComponent<BoxCollider>();
 	}
         
     public void Update()
@@ -43,9 +46,6 @@ public class Player : MonoBehaviour {
     }
     
     public void ProcessMessage(JToken data) {
-
-        Debug.Log(data);
-
         try {
 			if (data["Shoot"] != null) {
 	            Shoot();
@@ -105,7 +105,6 @@ public class Player : MonoBehaviour {
     public void AssignPlayerToTeam(GameObject prefab, Team team)
     {
         bodyPrefab = prefab;
-        bodyPrefab.gameObject.GetComponent<MeshRenderer>().material = team.colorMaterial;
         this.team = team;
     }
 
@@ -122,16 +121,24 @@ public class Player : MonoBehaviour {
     public void Spawn()
     {
         playerBody = (GameObject)Instantiate(bodyPrefab);
+        playerBody.GetComponent<MeshRenderer>().material = team.colorMaterial;
         playerBody.transform.SetParent(this.transform);
+        playerBody.transform.localPosition = Vector3.zero;
+        playerBody.transform.rotation = this.transform.rotation;
 
         this.transform.position = team.spawnPoint.position;
         this.transform.rotation = team.spawnPoint.rotation;
+
+        health = maxHealth;
+        playerCollider.isTrigger = false; // re-enable colliders so they can be crashed into
     }
 
     protected void Die()
     {
         Destroy(playerBody);
         team.HandlePlayerDeath(this);
+
+        playerCollider.isTrigger = true; // since the player is dead, other players should be able to pass through them
         playerBody = null;
     }
 }
