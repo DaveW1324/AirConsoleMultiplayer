@@ -28,7 +28,7 @@ public class Rocket : Projectile
             {
                 //TODO: do some sort of offset depending on closeness
                 float damageAmt = damage;
-                p.TakeDamage(damageAmt);
+				p.TakeDamage(damageAmt, shooter);
             }
         }
     }

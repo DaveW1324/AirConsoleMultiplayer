@@ -108,14 +108,18 @@ public class Player : MonoBehaviour {
         this.team = team;
     }
 
-    public void TakeDamage(float damage)
+	public void TakeDamage(float damage, Player shooter)
     {
-        health -= damage;
+		// prevent friendly fire
+		if (team != shooter.team) {
 
-        if (health <= 0)
-        {
-            Die();
-        }
+			health -= damage;
+
+			if (health <= 0) {
+				shooter.team.HandlePlayerKill ();
+				Die ();
+			}
+		}
     }
 
     public void Spawn()

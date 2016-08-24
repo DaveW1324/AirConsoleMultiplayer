@@ -16,7 +16,7 @@ public class StandardBullet : Projectile
         
         if (p != null)
         {
-            p.TakeDamage(damage);
+            p.TakeDamage(damage, shooter);
         }
     }
 }

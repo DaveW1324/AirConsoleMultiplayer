@@ -13,6 +13,8 @@ public class Team : MonoBehaviour {
     public int playerLimit = 1;
     public List<Player> players = new List<Player>();
 
+	public int score = 0;
+
     public int CurrentPlayerCount
     {
         get
@@ -43,6 +45,11 @@ public class Team : MonoBehaviour {
             player.Spawn();
         }
     }
+
+	public void HandlePlayerKill()
+	{
+		score++;
+	}
 
     public void HandlePlayerDeath(Player player)
     {
