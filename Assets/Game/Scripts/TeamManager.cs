@@ -31,6 +31,13 @@ public class TeamManager
         teams = new List<Team>();
     }
 
+    public List<Team> Teams {
+        get
+        {
+            return teams;
+        }
+    }
+
     public void AddTeam(Team t)
     {
         if (!teams.Contains(t))
