@@ -4,9 +4,13 @@ using System;
 
 public class Rocket : Projectile
 {
+
+	public int numberOfBullets = 5;
+
     public void Start()
     {
-        Destroy(this.gameObject, duration);
+		this.gameObject.GetComponent<Rigidbody>().velocity = transform.forward * speed;
+		StartCoroutine(TimedExplosion());
     }
 
     public void OnDestroy()
@@ -32,4 +36,12 @@ public class Rocket : Projectile
             }
         }
     }
+
+	IEnumerator TimedExplosion() {
+		yield return new WaitForSeconds(duration);
+		GameObject ps = Instantiate(particleExplosion, transform.position, transform.rotation) as GameObject;
+		Destroy (ps, particleDuration);
+		PerformDamage (null);
+		Destroy(this.gameObject);
+	}
 }

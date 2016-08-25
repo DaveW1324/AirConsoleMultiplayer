@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
     public int maxHealth = 100;
     public Transform gunTip;
     public GameObject standardBullet;
+	public RocketUpgrade currentUpgrade;
 
     // Components
     protected Rigidbody playerRigidBody;
@@ -96,10 +97,18 @@ public class Player : MonoBehaviour {
 
     protected void Shoot()
     {
-        GameObject go = (GameObject) Instantiate(standardBullet, gunTip.position, transform.rotation);
-
-        StandardBullet bullet = go.GetComponent<StandardBullet>();
-        bullet.Shooter = this; 
+		if (currentUpgrade == null)
+		{			
+			GameObject go = (GameObject)Instantiate (standardBullet, gunTip.position, transform.rotation);
+			Projectile bullet = go.GetComponent<Projectile> ();
+			bullet.Shooter = this;
+		} 
+		else 
+		{
+			if (!currentUpgrade.Shoot (this, gunTip.position, transform.rotation)) {
+				currentUpgrade = null;
+			}
+		}
     }
 
     public void AssignPlayerToTeam(GameObject prefab, Team team)

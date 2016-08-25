@@ -204,10 +204,14 @@
      <Compile Include="Assets\AirConsole\scripts\Settings.cs" />
      <Compile Include="Assets\AirConsole\scripts\WebsocketListener.cs" />
      <Compile Include="Assets\Game\Scripts\ConnectionManager.cs" />
+     <Compile Include="Assets\Game\Scripts\GameManager.cs" />
      <Compile Include="Assets\Game\Scripts\JTokenCreator.cs" />
      <Compile Include="Assets\Game\Scripts\Player.cs" />
      <Compile Include="Assets\Game\Scripts\Team.cs" />
      <Compile Include="Assets\Game\Scripts\TeamManager.cs" />
+     <Compile Include="Assets\Game\Scripts\Upgrades\RocketSpawner.cs" />
+     <Compile Include="Assets\Game\Scripts\Upgrades\RocketUpgrade.cs" />
+     <Compile Include="Assets\Game\Scripts\Upgrades\Upgrade.cs" />
      <Compile Include="Assets\Game\Scripts\Weapons\Projectile.cs" />
      <Compile Include="Assets\Game\Scripts\Weapons\Rocket.cs" />
      <Compile Include="Assets\Game\Scripts\Weapons\StandardBullet.cs" />

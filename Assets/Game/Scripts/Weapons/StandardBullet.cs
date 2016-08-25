@@ -6,7 +6,7 @@ public class StandardBullet : Projectile
 {
     public void Start()
     {
-        this.gameObject.GetComponent<Rigidbody>().velocity = transform.forward * 20.0f;
+        this.gameObject.GetComponent<Rigidbody>().velocity = transform.forward * speed;
         Destroy(this.gameObject, duration);
     }
 

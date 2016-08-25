@@ -8,7 +8,7 @@ public class TeamManager
     protected List<Team> teams;
 
     /*
-	* Find/Create/Return our one and only Quest Manager object
+	* Find/Create/Return our one and only Team Manager object
 	* for the game
 	**/
     public static TeamManager Instance
