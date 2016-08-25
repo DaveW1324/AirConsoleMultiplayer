@@ -100,9 +100,8 @@ public class ConnectionManager : MonoBehaviour {
                 }
 
                 // Add the player to our list with this new number and update our Player to be aware
-                players.Add(playerNumber, p);                
-                p.playerNumber = playerNumber;
-                
+                players.Add(deviceId, p);                
+                p.playerNumber = playerNumber;                
 
                 Debug.Log("Added DeviceId: " + deviceId + " as PlayerNumber: " + playerNumber);
                 Debug.Log("Number of Players: " + players.Count);
@@ -118,13 +117,7 @@ public class ConnectionManager : MonoBehaviour {
 	/// <param name="deviceId">Device identifier.</param>
 	public void OnDisconnect (int deviceId)
 	{
-		Debug.LogWarning ("OnDisconnect");
-
-		int playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
-
-		if (playerNumber != -1) {
-			Debug.LogWarning ("Player Disconnected: " + playerNumber);
-		}
+		Debug.LogWarning ("Player Disconnected: " + deviceId);
 	}
 
 
@@ -135,20 +128,20 @@ public class ConnectionManager : MonoBehaviour {
 	/// <param name="data">Data.</param>
 	void OnMessage (int deviceId, JToken data) {
 		int playerNumber = AirConsole.instance.ConvertDeviceIdToPlayerNumber (deviceId);
-        Debug.Log("Received Message for DeviceID: " + deviceId + " which is PlayerNumber: " + playerNumber);
-        ProcessMessage(playerNumber, data);		
+        //Debug.Log("Received Message for DeviceID: " + deviceId + " which is PlayerNumber: " + playerNumber);
+        ProcessMessage(deviceId, data);		
 	}
 
-    protected void ProcessMessage(int playerNumber, JToken data)
+    protected void ProcessMessage(int deviceId, JToken data)
     {
-        if (playerNumber != -1 && players.ContainsKey(playerNumber))
+		if (players.ContainsKey(deviceId))
         {
-            Player p = players[playerNumber];
+			Player p = players[deviceId];
             p.ProcessMessage(data);
         }
         else
         {
-            Debug.LogWarning("Attempted to Process a message from an invalid PlayerNumber: " + playerNumber);
+			Debug.LogWarning("Attempted to Process a message from an invalid DeviceId: " + deviceId);
         }
     }
 

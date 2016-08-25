@@ -24,8 +24,6 @@ public class Rocket : Projectile
 
         for(int i = 0; i < hitColliders.Length; i++)
         {
-            Debug.Log("Hit Collider: " + hitColliders[i]);
-
             Player p = hitColliders[i].gameObject.GetComponent<Player>();
 
             if (p != null)

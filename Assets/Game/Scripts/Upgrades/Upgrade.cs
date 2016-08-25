@@ -8,7 +8,7 @@ public abstract class Upgrade : MonoBehaviour {
 
 	protected int shotsTaken = 0;
 
-	public abstract void OnCollisionEnter (Collision collision);
+	public abstract void OnTriggerEnter (Collider collider);
 
 	/**
 	 * Returns true if powerup remains, returns false if powerup should be removed

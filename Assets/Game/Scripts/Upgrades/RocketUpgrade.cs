@@ -3,16 +3,15 @@ using System.Collections;
 
 public class RocketUpgrade : Upgrade {
 
-	public override void OnCollisionEnter (Collision collision)
+	public override void OnTriggerEnter (Collider collider)
 	{
-		Player p = collision.gameObject.GetComponent<Player> ();
+		Player p = collider.gameObject.GetComponent<Player> ();
 
 		if (p != null) {
 			p.currentUpgrade = this;
+			this.GetComponent<MeshRenderer> ().enabled = false;
+			this.GetComponent<Collider> ().enabled = false;
 		}
-
-		this.GetComponent<MeshRenderer> ().enabled = false;
-		this.GetComponent<Collider> ().enabled = false;
 	}
 
 
